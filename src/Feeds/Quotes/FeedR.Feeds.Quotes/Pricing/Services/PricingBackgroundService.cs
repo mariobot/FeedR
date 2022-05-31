@@ -11,7 +11,7 @@
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _priceGenerator.StartAsync();
+            _ = _priceGenerator.StartAsync();
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
