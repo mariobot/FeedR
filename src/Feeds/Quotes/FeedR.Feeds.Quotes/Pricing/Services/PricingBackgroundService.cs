@@ -1,22 +1,29 @@
-﻿namespace FeedR.Feeds.Quotes.Pricing.Services
+﻿using FeedR.Feeds.Quotes.Pricing.Requests;
+
+namespace FeedR.Feeds.Quotes.Pricing.Services
 {
-    public class PricingBackgroundService : IHostedService
+    public class PricingBackgroundService : BackgroundService
     {
         private readonly IPriceGenerator _priceGenerator;
+        private readonly PricingRequestsChannel _requestsChannel;
 
-        public PricingBackgroundService(IPriceGenerator priceGenerator)
+        public PricingBackgroundService(IPriceGenerator priceGenerator, PricingRequestsChannel requestsChannel)
         {
             _priceGenerator = priceGenerator;
+            _requestsChannel = requestsChannel;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _ = _priceGenerator.StartAsync();
-        }
-
-        public async Task StopAsync(CancellationToken cancellationToken)
-        {
-            _priceGenerator.StopAsync();
+            await foreach (var request in _requestsChannel.Requests.Reader.ReadAllAsync(stoppingToken))
+            {
+                var _ = request switch
+                {
+                    StartPricing => _priceGenerator.StartAsync(),
+                    StopPricing => _priceGenerator.StopAsync(),
+                    _ => Task.CompletedTask
+                };
+            }
         }
     }
 }
