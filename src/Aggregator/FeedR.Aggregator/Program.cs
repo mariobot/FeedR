@@ -1,4 +1,10 @@
+using FeedR.Shared.Readis;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddRedis(builder.Configuration);
+
 var app = builder.Build();
 
 app.MapGet("/", () => "FeedR Aggregator");

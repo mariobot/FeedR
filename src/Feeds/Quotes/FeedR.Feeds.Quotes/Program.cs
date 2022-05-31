@@ -1,9 +1,11 @@
 using FeedR.Feeds.Quotes.Pricing.Requests;
 using FeedR.Feeds.Quotes.Pricing.Services;
+using FeedR.Shared.Readis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
+    .AddRedis(builder.Configuration)
     .AddSingleton<PricingRequestsChannel>()
     .AddSingleton<IPriceGenerator, PrincingGenerator>()
     .AddHostedService<PricingBackgroundService>();
