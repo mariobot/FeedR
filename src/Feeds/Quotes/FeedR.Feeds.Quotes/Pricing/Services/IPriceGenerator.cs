@@ -2,7 +2,7 @@
 
 namespace FeedR.Feeds.Quotes.Pricing.Services;
 
-public interface IPriceGenerator
+internal interface IPriceGenerator
 {
     IAsyncEnumerable<CurrencyPair> StartAsync();
     Task StopAsync();

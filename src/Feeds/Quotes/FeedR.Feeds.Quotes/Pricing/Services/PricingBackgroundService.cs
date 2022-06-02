@@ -3,7 +3,7 @@ using FeedR.Shared.Streaming;
 
 namespace FeedR.Feeds.Quotes.Pricing.Services
 {
-    public class PricingBackgroundService : BackgroundService
+    internal class PricingBackgroundService : BackgroundService
     {
         private int _runningStatus; // 0 or 1
         private readonly IPriceGenerator _priceGenerator;
