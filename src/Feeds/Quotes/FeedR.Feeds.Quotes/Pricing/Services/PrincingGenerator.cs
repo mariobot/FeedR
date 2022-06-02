@@ -2,7 +2,7 @@
 
 namespace FeedR.Feeds.Quotes.Pricing.Services
 {
-    public class PrincingGenerator : IPriceGenerator
+    internal sealed class PrincingGenerator : IPriceGenerator
     {
         private readonly Random _random = new Random();
         private readonly Dictionary<string, decimal> _currencyPairs = new()
@@ -20,7 +20,7 @@ namespace FeedR.Feeds.Quotes.Pricing.Services
             this.logger = logger;
         }
 
-        public async Task StartAsync()
+        public async IAsyncEnumerable<CurrencyPair> StartAsync()
         {
             _isRunning = true;
             while (_isRunning)
@@ -29,7 +29,7 @@ namespace FeedR.Feeds.Quotes.Pricing.Services
                 {
                     if (!_isRunning)
                     {
-                        return;
+                        yield break;
                     }
 
                     var tick = NextTick();
@@ -40,6 +40,8 @@ namespace FeedR.Feeds.Quotes.Pricing.Services
 
                     logger.LogInformation($"Updated pricing for: {symbol}, {pricing:F} --> {newPricing:F} [{tick:F}]");
                     var currencyPair = new CurrencyPair(symbol, newPricing, timestamp);
+                    yield return currencyPair;
+
                     await Task.Delay(TimeSpan.FromSeconds(1));
 
                 }

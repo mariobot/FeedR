@@ -1,9 +1,13 @@
+using FeedR.Aggregator.Services;
 using FeedR.Shared.Readis;
+using FeedR.Shared.Streaming;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddRedis(builder.Configuration);
+    .AddSingleton<PricingStreamBackgroundService>()
+    .AddRedis(builder.Configuration)
+    .AddStreaming();
 
 var app = builder.Build();
 

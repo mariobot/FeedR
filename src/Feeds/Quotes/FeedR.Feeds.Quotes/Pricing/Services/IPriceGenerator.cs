@@ -1,8 +1,10 @@
-﻿namespace FeedR.Feeds.Quotes.Pricing.Services
+﻿using FeedR.Feeds.Quotes.Pricing.Models;
+
+namespace FeedR.Feeds.Quotes.Pricing.Services;
+
+public interface IPriceGenerator
 {
-    public interface IPriceGenerator
-    {
-        Task StartAsync();
-        Task StopAsync();
-    }
+    IAsyncEnumerable<CurrencyPair> StartAsync();
+    Task StopAsync();
 }
+
